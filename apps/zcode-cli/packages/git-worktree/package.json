@@ -1,0 +1,28 @@
+{
+  "name": "@zcode/git-worktree",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Isolated git worktree and branch lifecycle: create, inspect, commit, integrate and remove safely.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "node ../../scripts/clean-dist.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.tests.json",
+    "lint": "oxlint . --ignore-pattern dist",
+    "lint:fix": "oxlint --fix . --ignore-pattern dist",
+    "test": "node --import tsx --test \"tests/**/*.test.ts\""
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.20.0"
+  }
+}
