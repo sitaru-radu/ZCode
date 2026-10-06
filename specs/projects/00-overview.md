@@ -16,7 +16,7 @@ M1 delivers this **headless** (services + tests + demo script). The Projects/Mis
 | Id | Decision | Rationale |
 |----|----------|-----------|
 | D1 | Reuse `@zcode/dynamic-workflow` as the execution substrate; do not write a second durable engine | It already provides a pure deterministic state machine, journal + replay, scheduler with concurrency caps, repair/nudge, and a run UI |
-| D2 | DSH is reached only through `@zcode/dsh-executor` (ACP client + workflow driver) | Keeps every DSH-specific API behind one adapter; a second executor stays possible |
+| D2 | DSH is reached only through `@zcode/dsh-executor` (the ACP adapter); the workflow-driver binding that consumes it lives in `@zcode/projects-mission` | Keeps every DSH-specific API behind one adapter with no engine imports, and keeps the engine coupling in the package that already depends on the engine |
 | D3 | The coordinator is deterministic; the model only proposes | An LLM must never decide lifecycle transitions, readiness or completion |
 | D4 | Worktrees live outside the repository, under the ZCode data dir | Keeps the user's working tree and workspace index untouched |
 | D5 | Mission truth lives in our own SQLite file; execution truth stays in the workflow journal | Avoids touching core schema/migrations; two clearly-owned stores linked by `runId` |
@@ -24,6 +24,9 @@ M1 delivers this **headless** (services + tests + demo script). The Projects/Mis
 | D7 | Upstream is followed by **merge** from `upstream/main`, not rebase | Upstream history is squashed (`Initial commit`, `feat: open source`, `feat: update v3.14.3`); rebasing onto rewritten snapshots is not meaningful |
 | D8 | New code lives in new packages under `apps/zcode-cli/packages/*` | `apps/zcode-cli` is a single legacy (`managed: false`) module in `architecture-policy.yaml`; the root workspace glob already includes `apps/zcode-cli/packages/*` |
 | D9 | M1 refuses to merge anything into the user's branch automatically | Applying results is an explicit M2 action |
+| D10 | **One workflow run per mission**; the run's `cwd` is the project repository root. Per-task isolation comes from the driver creating each actor's DSH session in that task's worktree; run-level `world.run`/`files.*`/`git.*` execute in the **integration worktree** | The driver's `cwd` is single/run-level (`workflow-driver-types.ts:116`), and the runner already owns all git facts (runner spec §1–§3) |
+| D11 | **Zero-upstream-edit execution substrate**: `runWorkflowScript` from `@zcode/dynamic-workflow-runtime` driven by our own `WorkflowDriver` (`projects-mission/src/workflow-driver.ts`), journal = in-memory for M1 (mission truth lives in `projects.db`, D5) | Proven precedent in-tree (`dynamic-workflow-snippet-service.ts:129-149` + hand-written driver literal `:220-245`); no edits to files upstream rewrites. Optionally, M2 may add the one-line branch that reuses the ZCode run service if the UI needs run projections |
+| D12 | Typed results are submitted **after a turn ends**, not through a mid-turn blocking tool: the driver parses the payload (MCP `submit_result` event or last fenced JSON block) and reports it to the engine; a `reject` verdict becomes a follow-up prompt (repair as a new turn) | Removes the dependency on an unverified mid-turn blocking-tool mechanism while keeping the engine's repair/nudge budgets authoritative |
 
 ## 3. Scope
 
@@ -73,8 +76,8 @@ Recorded by Phase 0 on the build host (netcup VM, Debian 13, 8 vCPU, 15 GiB RAM,
 | `@zcode/projects-core` | `apps/zcode-cli/packages/projects-core` | Domain types, state machines, deterministic decisions (readiness, capacity, retry, gates), plan validation, plan→script compilation |
 | `@zcode/projects-store` | `apps/zcode-cli/packages/projects-store` | `projects.db` schema + migrations + repositories; recovery queries |
 | `@zcode/git-worktree` | `apps/zcode-cli/packages/git-worktree` | Worktree/branch lifecycle, deterministic git facts, integration, safe removal |
-| `@zcode/dsh-executor` | `apps/zcode-cli/packages/dsh-executor` | ACP client (`DeepSeekHarnessAdapter`) and the workflow driver binding |
-| `@zcode/projects-mission` | `apps/zcode-cli/packages/projects-mission` | Mission runner: plan → run → events → gates → result; restart reconciliation |
+| `@zcode/dsh-executor` | `apps/zcode-cli/packages/dsh-executor` | ACP client (`DeepSeekHarnessAdapter`); **no** workflow-engine imports |
+| `@zcode/projects-mission` | `apps/zcode-cli/packages/projects-mission` | Mission runner: plan → run → events → gates → result; restart reconciliation; **the workflow-driver binding** (`src/workflow-driver.ts`) |
 
 Dependency direction: `projects-mission` → {`projects-core`, `projects-store`, `git-worktree`,
 `dsh-executor`}; `dsh-executor` → `projects-core` (types only); nothing imports `projects-mission`.

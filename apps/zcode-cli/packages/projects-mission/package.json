@@ -18,11 +18,13 @@
     "typecheck": "tsc --noEmit -p tsconfig.tests.json",
     "lint": "oxlint . --ignore-pattern dist",
     "lint:fix": "oxlint --fix . --ignore-pattern dist",
-    "test": "node --import tsx --test \"tests/**/*.test.ts\""
+    "test": "node --import tsx --test \"tests/**/*.test.ts\"",
+    "demo": "node --import tsx scripts/demo.mts"
   },
   "dependencies": {
     "@zcode/dsh-executor": "workspace:*",
     "@zcode/dynamic-workflow": "workspace:*",
+    "@zcode/dynamic-workflow-runtime": "workspace:*",
     "@zcode/git-worktree": "workspace:*",
     "@zcode/projects-core": "workspace:*",
     "@zcode/projects-store": "workspace:*"

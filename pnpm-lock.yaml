@@ -446,6 +446,15 @@ importers:
         specifier: ^7.2.6
         version: 7.3.3(@types/node@24.12.2)(jiti@2.6.1)(lightningcss@1.32.0)(tsx@4.21.0)(yaml@2.9.0)
 
+  apps/zcode-cli/packages/dsh-executor:
+    devDependencies:
+      '@types/node':
+        specifier: ^24.0.0
+        version: 24.12.2
+      tsx:
+        specifier: ^4.20.0
+        version: 4.21.0
+
   apps/zcode-cli/packages/dynamic-workflow:
     dependencies:
       typescript:
@@ -465,6 +474,15 @@ importers:
       '@types/node':
         specifier: ^24.0.0
         version: 24.12.2
+
+  apps/zcode-cli/packages/git-worktree:
+    devDependencies:
+      '@types/node':
+        specifier: ^24.0.0
+        version: 24.12.2
+      tsx:
+        specifier: ^4.20.0
+        version: 4.21.0
 
   apps/zcode-cli/packages/i18n:
     dependencies:
@@ -505,6 +523,56 @@ importers:
       typescript:
         specifier: ^5.9.0
         version: 5.9.3
+
+  apps/zcode-cli/packages/projects-core:
+    devDependencies:
+      '@types/node':
+        specifier: ^24.0.0
+        version: 24.12.2
+      tsx:
+        specifier: ^4.20.0
+        version: 4.21.0
+
+  apps/zcode-cli/packages/projects-mission:
+    dependencies:
+      '@zcode/dsh-executor':
+        specifier: workspace:*
+        version: link:../dsh-executor
+      '@zcode/dynamic-workflow':
+        specifier: workspace:*
+        version: link:../dynamic-workflow
+      '@zcode/dynamic-workflow-runtime':
+        specifier: workspace:*
+        version: link:../dynamic-workflow-runtime
+      '@zcode/git-worktree':
+        specifier: workspace:*
+        version: link:../git-worktree
+      '@zcode/projects-core':
+        specifier: workspace:*
+        version: link:../projects-core
+      '@zcode/projects-store':
+        specifier: workspace:*
+        version: link:../projects-store
+    devDependencies:
+      '@types/node':
+        specifier: ^24.0.0
+        version: 24.12.2
+      tsx:
+        specifier: ^4.20.0
+        version: 4.21.0
+
+  apps/zcode-cli/packages/projects-store:
+    dependencies:
+      '@zcode/projects-core':
+        specifier: workspace:*
+        version: link:../projects-core
+    devDependencies:
+      '@types/node':
+        specifier: ^24.0.0
+        version: 24.12.2
+      tsx:
+        specifier: ^4.20.0
+        version: 4.21.0
 
   apps/zcode-cli/packages/shared-types:
     devDependencies:
@@ -16172,11 +16240,11 @@ snapshots:
 
   lodash.merge@4.6.2: {}
 
+  lodash.pickby@4.6.0: {}
+
   lodash.uniqby@4.7.0: {}
 
   lodash@4.18.1: {}
-
-  lodash.pickby@4.6.0: {}
 
   log-symbols@4.1.0:
     dependencies:
