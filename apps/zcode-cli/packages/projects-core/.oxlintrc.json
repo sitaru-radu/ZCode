@@ -1,0 +1,12 @@
+{
+  "rules": {
+    "max-lines": ["error", { "max": 400, "skipBlankLines": true, "skipComments": true }]
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"],
+      "rules": { "max-lines": "off" }
+    }
+  ],
+  "ignorePatterns": ["dist", "node_modules"]
+}

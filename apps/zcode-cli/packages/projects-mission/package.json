@@ -1,0 +1,36 @@
+{
+  "name": "@zcode/projects-mission",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Mission runner: plan, dispatch DSH workers in worktrees, review, validation gates, recovery, and the workflow-driver binding.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "node ../../scripts/clean-dist.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.tests.json",
+    "lint": "oxlint . --ignore-pattern dist",
+    "lint:fix": "oxlint --fix . --ignore-pattern dist",
+    "test": "node --import tsx --test \"tests/**/*.test.ts\"",
+    "demo": "node --import tsx scripts/demo.mts"
+  },
+  "dependencies": {
+    "@zcode/dsh-executor": "workspace:*",
+    "@zcode/dynamic-workflow": "workspace:*",
+    "@zcode/dynamic-workflow-runtime": "workspace:*",
+    "@zcode/git-worktree": "workspace:*",
+    "@zcode/projects-core": "workspace:*",
+    "@zcode/projects-store": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.20.0"
+  }
+}

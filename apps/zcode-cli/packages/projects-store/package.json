@@ -1,0 +1,30 @@
+{
+  "name": "@zcode/projects-store",
+  "version": "0.1.0",
+  "private": true,
+  "description": "SQLite persistence for projects, missions, plans, tasks, workers, events, validations and reviews.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "node ../../scripts/clean-dist.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.tests.json",
+    "lint": "oxlint . --ignore-pattern dist",
+    "lint:fix": "oxlint --fix . --ignore-pattern dist",
+    "test": "node --import tsx --test \"tests/**/*.test.ts\""
+  },
+  "dependencies": {
+    "@zcode/projects-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.20.0"
+  }
+}
